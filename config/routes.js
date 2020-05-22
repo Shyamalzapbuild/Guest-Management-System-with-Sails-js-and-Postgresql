@@ -19,11 +19,33 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  //create Roles
   'POST /create/role':'AdminController.createRole',
+  
+  //create Admin
+  'POST /create/admin':'AdminSignupController.createAdmin',
+  
+  //Admin
   'POST /create/manager':'AdminController.createManager',
   'GET /managers':'AdminController.getManagers',
-  'GET /managers/:id':'AdminController.getManagerID',
-  'POST /create/admin':'AdminSignupController.createAdmin',
+  'GET /manager/:id':'AdminController.getManagerID',
+  'PUT /update/manager/:id':'AdminController.updateManager',
+  'DELETE /delete/manager/:id':'AdminController.deleteManager',
+
+  'POST /create/room':'AdminController.createRoom',
+  'GET /rooms':'AdminController.getRoom',
+  'GET /room/:id':'AdminController.getRoomId',
+  'PUT /update/room/:id':'AdminController.updateRoom',
+  'DELETE /delete/room/:id':'AdminController.deleteRoom',
+
+
+
+
+
+
+
+
+
   '/': { view: 'pages/homepage' },
 
 

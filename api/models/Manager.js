@@ -20,7 +20,7 @@ module.exports = {
       type:'String',
       required:true
     },
-    authId:{
+    emialInfo:{
       model:'auth',
       unique:true
     },

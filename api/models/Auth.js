@@ -28,7 +28,7 @@ module.exports = {
     },
     manager:{
       collection:'manager',
-      via:'authId'
+      via:'emialInfo'
     },
     guest:{
       collection:'guest',

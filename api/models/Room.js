@@ -9,23 +9,25 @@ module.exports = {
 
   attributes: {
     RoomNo:{
-      type:'Integer',
-      required:true
+      type:'number',
+      required:true,
+      unique:true
     },
     cost:{
-      type:'Integer',
+      type:'number',
+      required:true
+    },
+    type:{
+      type:'number',
       required:true
     },
     status:{
       type:'Boolean',
       required:true
     },
-    date:{
-      type:'String',
-      required:true
-    },
     history:{
-      model:'history'
+      collection:'roomHistory',
+      via:'room'
     },
     roomApproval:{
       collection:'roomApproval',
