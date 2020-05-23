@@ -9,7 +9,8 @@ module.exports = {
 
   attributes: {
     date:{
-      type:'String',
+      type: 'ref',
+      columnType: 'timestamp',
       required:true
     },
     status:{

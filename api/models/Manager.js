@@ -14,7 +14,8 @@ module.exports = {
     },
     phoneNo:{
       type:'String',
-      required:true
+      required:true,
+      unique:true
     },
     address:{
       type:'String',

@@ -23,20 +23,22 @@ module.exports.routes = {
   'POST /create/role':'AdminController.createRole',
   
   //create Admin
-  'POST /create/admin':'AdminSignupController.createAdmin',
+  'POST /create/admin':'AdminController.createAdmin',
   
-  //Admin
-  'POST /create/manager':'AdminController.createManager',
-  'GET /managers':'AdminController.getManagers',
-  'GET /manager/:id':'AdminController.getManagerID',
-  'PUT /update/manager/:id':'AdminController.updateManager',
-  'DELETE /delete/manager/:id':'AdminController.deleteManager',
+  //Manager
+  'POST /create/manager':'ManagerController.createManager',
+  'POST /login/manager':'ManagerController.managerLogin',
+  'GET /managers':'ManagerController.getManagers',
+  'GET /manager/:id':'ManagerController.getManagerID',
+  'PUT /update/manager/:id':'ManagerController.updateManager',
+  'DELETE /delete/manager/:id':'ManagerController.deleteManager',
 
-  'POST /create/room':'AdminController.createRoom',
-  'GET /rooms':'AdminController.getRoom',
-  'GET /room/:id':'AdminController.getRoomId',
-  'PUT /update/room/:id':'AdminController.updateRoom',
-  'DELETE /delete/room/:id':'AdminController.deleteRoom',
+  //Room
+  'POST /create/room':'RoomController.createRoom',
+  'GET /rooms':'RoomController.getRoom',
+  'GET /room/:id':'RoomController.getRoomId',
+  'PUT /update/room/:id':'RoomController.updateRoom',
+  'DELETE /delete/room/:id':'RoomController.deleteRoom',
 
 
 

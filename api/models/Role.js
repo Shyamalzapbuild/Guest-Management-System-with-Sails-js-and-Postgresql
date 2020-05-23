@@ -10,7 +10,8 @@ module.exports = {
   attributes: {
     role_id:{
       type:"number",
-      required:true
+      required:true,
+      unique:true
     },
     name:{
       type:"String",

@@ -9,11 +9,13 @@ module.exports = {
 
   attributes: {
     checkIn:{
-      type:'String',
-      required:true
+      type: 'ref',
+      columnType: 'timestamp',
+      required: true,
     },
     checkOut:{
-      type:'String'
+      type:'String',
+      columnType:'timestamp',
     },
     room:{
       model:'room'
