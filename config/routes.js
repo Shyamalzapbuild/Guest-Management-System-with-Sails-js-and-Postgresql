@@ -38,9 +38,21 @@ module.exports.routes = {
   'GET /rooms':'RoomController.getRoom',
   'GET /room/:id':'RoomController.getRoomId',
   'PUT /update/room/:id':'RoomController.updateRoom',
+  'PUT /update/room/status/:id':'RoomController.ManagerUpdateRoom',
   'DELETE /delete/room/:id':'RoomController.deleteRoom',
 
-
+  //Guest
+  'POST /create/guest':'GuestController.createGuest',
+  'PUT /update/guest':'GuestController.updateGuest',
+  'POST /request/update/guest':'GuestController.ManagerUpdateGuest',
+  'GET /list/update/guest':'GuestController.ManagerUpdateGuestList',
+  'PUT /approval/update/guest/:id':'GuestController.ApproveUpdateGuest',
+  'GET /guests':'GuestController.getGuest',
+  'GET /guest/:id':'GuestController.getGuestId',
+  'DELETE /delete/guest/:id':'GuestController.deleteGuest',
+  'POST /request/delete/guest':'GuestController.ManagerDeleteGuest',
+  'GET /list/delete/guest':'GuestController.ManagerDeleteGuestList',
+  'DELETE /approval/delete/guest/:id/:status':'GuestController.ApproveDeleteGuest',
 
 
 

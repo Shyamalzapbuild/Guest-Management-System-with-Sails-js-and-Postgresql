@@ -1,5 +1,5 @@
 /**
- * Guest.js
+ * UpdateGuestApproval.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
@@ -8,13 +8,21 @@
 module.exports = {
 
   attributes: {
-    name:{
-      type:'String',
+    guestId:{
+      type:"number",
+      required:true
+    },
+    managerId:{
+      type:'number',
       required:true
     },
     status:{
       type: 'boolean', 
       defaultsTo: false
+    },
+    name:{
+      type:'String',
+      required:true
     },
     dob:{
       type: 'ref',
@@ -28,17 +36,6 @@ module.exports = {
     phoneNo:{
       type:'String',
       required:true
-    },
-    emialInfo:{
-      model:'auth',
-      unique:true
-    },
-    history:{
-      model:'history'
-    },
-    roomApproval:{
-      collection:'roomApproval',
-      via:'guest'
     }
   },
 

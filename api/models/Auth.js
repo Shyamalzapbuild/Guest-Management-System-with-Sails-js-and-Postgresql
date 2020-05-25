@@ -32,7 +32,7 @@ module.exports = {
     },
     guest:{
       collection:'guest',
-      via:'email'
+      via:'emialInfo'
     }
   }
 };

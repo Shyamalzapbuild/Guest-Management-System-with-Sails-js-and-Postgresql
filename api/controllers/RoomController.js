@@ -95,6 +95,13 @@ module.exports = {
     updateRoom: async(req,res)=>{
         try{
             const id = req.params.id;
+            const searchRoom = await Room.findOne({id:id});
+            if(!searchRoom){
+                return res.badRequest({
+                    response_code:400,
+                    error:'Room not found'
+                });
+            }
             const {RoomNo, cost, status, type} = req.allParams();
             if(!RoomNo){
                 return res.status(400).json({
@@ -120,13 +127,6 @@ module.exports = {
                     error:'type is required'
                 });
             }
-            const searchRoom = await Room.findOne({id:id});
-            if(!searchRoom){
-                return res.badRequest({
-                    response_code:400,
-                    error:'Room not found'
-                });
-            }
             const room = await Room.updateOne({id:id})
             .set({
                 RoomNo, cost, status, type
@@ -143,6 +143,41 @@ module.exports = {
             });
         }
     },
+
+    ManagerUpdateRoom: async(req,res)=>{
+        try {
+            const id = req.params.id;
+            const searchRoom = await Room.findOne({id:id});
+            if(!searchRoom){
+                return res.status(200).json({
+                    response_code:400,
+                    error:'Room Number with Given Id is not Present'
+                });
+            }
+            const {status} = req.allParams();
+            if(!status){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Status is required'
+                });
+            }
+            const room = await Room.updateOne({id:id})
+            .set({
+                status
+            });
+            return res.status(200).json({
+                response_code:200,
+                status:'Status is updated',
+                result:room
+            });
+        } catch (err) {
+            return res.status(400).json({
+                response_code:400,
+                error:err.cause.details
+            });
+        }
+    },
+
     deleteRoom: async(req,res)=>{
         try{
             const id = req.params.id;
