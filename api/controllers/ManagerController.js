@@ -39,6 +39,25 @@ module.exports = {
                 error:'password is required'
             });
         }
+        if(!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
+        {
+            return res.status(400).json({
+                response_code:400,
+                error:'Invalid Email'
+            });
+        }
+        if(!name.match(/^[A-Za-z]+$/)){
+            return res.status(400).json({
+                response_code:400,
+                error:'Invalid Name'
+            });
+        }
+        if(!phoneNo.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)){
+            return res.status(400).json({
+                response_code:400,
+                error:'Phone Number is not valid'
+            });
+        }
         const role = await Role.findOne({name:"manager"});
         if(!role){
             return res.status(400).json({
@@ -95,6 +114,13 @@ module.exports = {
                 return res.status(400).json({
                     response_code:400,
                     error:'password is required'
+                });
+            }
+            if(!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
+            {
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid Email'
                 });
             }
             const searchManager = await Auth.findOne({email:email});
@@ -180,6 +206,12 @@ module.exports = {
             return res.status(400).json({
                 response_code:400,
                 error:'address is required'
+            });
+        }
+        if(!name.match(/^[A-Za-z]+$/)){
+            return res.status(400).json({
+                response_code:400,
+                error:'Invalid Name'
             });
         }
         const updatemanager = await Manager.updateOne({id:id})

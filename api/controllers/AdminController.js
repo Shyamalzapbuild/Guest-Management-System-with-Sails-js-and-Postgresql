@@ -21,6 +21,12 @@ module.exports = {
                 error:'name is required'
             });
         }
+        if(!name.match(/^[A-Za-z]+$/)){
+            return res.status(400).json({
+                response_code:400,
+                error:'Invalid Name'
+            });
+        }
         const searchRole = await Role.findOne({role_id:role_id});
         if(searchRole){
             return res.status(400).json({
@@ -63,6 +69,19 @@ module.exports = {
             return res.status(400).json({
                 response_code:400,
                 error:'Name is required'
+            });
+        }
+        if(!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
+        {
+            return res.status(400).json({
+                response_code:400,
+                error:'Invalid Email'
+            });
+        }
+        if(!name.match(/^[A-Za-z]+$/)){
+            return res.status(400).json({
+                response_code:400,
+                error:'Invalid Name'
             });
         }
         const role = await Role.findOne({where:{name:"admin"}});

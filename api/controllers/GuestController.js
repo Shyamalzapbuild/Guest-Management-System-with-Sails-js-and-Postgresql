@@ -52,6 +52,31 @@ module.exports = {
                     error:"Guest's Role is not defined"
                 });
             }
+            if(!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
+            {
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid Email'
+                });
+            }
+            if(!name.match(/^[A-Za-z]+$/)){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid Name'
+                });
+            }
+            if(!phoneNo.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Phone Number is not valid'
+                });
+            }
+            if(!dob.match(/^\d{4}-\d{2}-\d{2}$/)){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid Date of birth(YYYY-MM-DD)'
+                });
+            }
             const searchGuest = await Auth.findOne({email:email});
             if(searchGuest){
                 return res.status(400).json({
@@ -85,6 +110,55 @@ module.exports = {
             });
         }
     },
+
+    guestLogin: async(req,res)=>{
+        try {
+            const {email,password} = req.allParams();
+            if(!email){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'email is required'
+                });
+            }
+            if(!password){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'password is required'
+                });
+            }
+            if(!email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
+            {
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid Email'
+                });
+            }
+            const searchGuest = await Auth.findOne({email:email});
+            if(!searchGuest){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Email is not registered'
+                });
+            }
+            const matchedPassword = await UtilService.comparePassword(password, searchGuest.password);
+            if(!matchedPassword){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'password is not matched'
+                });
+            }
+            return res.status(200).json({
+                response_code:200,
+                status:'Guest is Authorized'
+            });
+        } catch (err) {
+            return res.status(400).json({
+                response_code:400,
+                error:err.cause
+            });
+        }
+    },
+
     updateGuest: async (req,res)=>{
         try{
         const id = req.param.id;
@@ -102,6 +176,24 @@ module.exports = {
         if(!phoneNo){
             return res.badRequest({
                 err:'phoneNo is required'
+            });
+        }
+        if(!name.match(/^[A-Za-z]+$/)){
+            return res.status(400).json({
+                response_code:400,
+                error:'Invalid Name'
+            });
+        }
+        if(!phoneNo.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)){
+            return res.status(400).json({
+                response_code:400,
+                error:'Phone Number is not valid'
+            });
+        }
+        if(!dob.match(/^\d{4}-\d{2}-\d{2}$/)){
+            return res.status(400).json({
+                response_code:400,
+                error:'Invalid Date of birth(YYYY-MM-DD)'
             });
         }
         const updateguest = await Guest.updateOne({id:id})
@@ -153,6 +245,25 @@ module.exports = {
                     error:'Phone Nu,ber is required'
                 });
             }
+            if(!name.match(/^[A-Za-z]+$/)){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid Name'
+                });
+            }
+            if(!dob.match(/^\d{4}-\d{2}-\d{2}$/)){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid Date of birth(YYYY-MM-DD)'
+                });
+            }
+            if(!phoneNo.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Phone Number is not valid'
+                });
+            }
+
             const searchGuest = await Guest.findOne({id:guestId});
             if(!searchGuest){
                 return res.status(400).json({
@@ -178,7 +289,7 @@ module.exports = {
         }catch(err){
             return res.status(400).json({
                 response_code:400,
-                error:err.cause.details
+                error:err
             })
         }
     },
@@ -213,6 +324,12 @@ module.exports = {
                 return res.status(400).json({
                     response_code:400,
                     error:'Status is required'
+                });
+            }
+            if(!(typeof status =='boolean')){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid status(try true or false)'
                 });
             }
             if(status=true){
@@ -281,6 +398,7 @@ module.exports = {
             })
         }
     },
+
     deleteGuest: async(req,res)=>{
         try{
         const id = req.param.id;
@@ -391,6 +509,12 @@ module.exports = {
                 return res.status(400).json({
                     response_code:400,
                     error:'Status is required'
+                });
+            }
+            if(!(typeof status =='boolean')){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid status(try true or false)'
                 });
             }
             if(status=='true'){

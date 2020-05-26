@@ -161,6 +161,12 @@ module.exports = {
                     error:'Status is required'
                 });
             }
+            if(!(typeof status =='boolean')){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'Invalid status(try true or false)'
+                });
+            }
             const room = await Room.updateOne({id:id})
             .set({
                 status

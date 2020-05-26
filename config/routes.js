@@ -43,6 +43,7 @@ module.exports.routes = {
 
   //Guest
   'POST /create/guest':'GuestController.createGuest',
+  'POST /login/guest':'GuestController.guestLogin',
   'PUT /update/guest':'GuestController.updateGuest',
   'POST /request/update/guest':'GuestController.ManagerUpdateGuest',
   'GET /list/update/guest':'GuestController.ManagerUpdateGuestList',
