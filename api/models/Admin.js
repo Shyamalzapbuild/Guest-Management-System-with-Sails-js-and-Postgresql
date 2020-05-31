@@ -12,7 +12,7 @@ module.exports = {
       type:"String",
       required:true
     },
-    authId:{
+    emailInfo:{
       model:'auth',
       unique:true
     }

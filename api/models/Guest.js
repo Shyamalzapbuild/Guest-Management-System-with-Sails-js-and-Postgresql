@@ -29,16 +29,17 @@ module.exports = {
       type:'String',
       required:true
     },
-    emialInfo:{
+    emailInfo:{
       model:'auth',
       unique:true
     },
     history:{
-      model:'history'
+      collection:'history',
+      via:'guestId'
     },
-    roomApproval:{
-      collection:'roomApproval',
-      via:'guest'
+    requestRoom:{
+      collection:'requestRoom',
+      via:'guestId'
     }
   },
 

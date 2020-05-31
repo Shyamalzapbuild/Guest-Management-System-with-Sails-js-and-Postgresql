@@ -21,13 +21,13 @@ module.exports = {
       type:'String',
       required:true
     },
-    emialInfo:{
+    emailInfo:{
       model:'auth',
       unique:true
     },
-    roomApproval:{
-      collection:'roomApproval',
-      via:'manager'
+    requestRoom:{
+      collection:'requestRoom',
+      via:'managerId'
     }
   },
 

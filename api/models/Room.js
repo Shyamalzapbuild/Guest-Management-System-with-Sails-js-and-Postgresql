@@ -23,19 +23,15 @@ module.exports = {
     },
     status:{
       type:'Boolean',
-      required:true
+      defaultsTo: false
     },
     history:{
-      collection:'roomHistory',
-      via:'room'
-    },
-    roomApproval:{
-      collection:'roomApproval',
-      via:'room'
+      collection:'history',
+      via:'roomId'
     },
     requestRoom:{
       collection:'requestRoom',
-      via:'room'
+      via:'roomId'
     }
   },
 

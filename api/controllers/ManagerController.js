@@ -86,7 +86,7 @@ module.exports = {
             email,password:encryptedPassword,roleId:role.role_id
         }).fetch();
         const manager = await Manager.create({
-            name,phoneNo, address, emialInfo:auth.id
+            name,phoneNo, address, emailInfo:auth.id
         }).fetch();
         return res.status(200).json({
             response_code:200,
@@ -123,23 +123,27 @@ module.exports = {
                     error:'Invalid Email'
                 });
             }
-            const searchManager = await Auth.findOne({email:email});
-            if(!searchManager){
+            const searchAuth = await Auth.findOne({email:email});
+            if(!searchAuth){
                 return res.status(400).json({
                     response_code:400,
                     error:'Email is not registered'
                 });
             }
-            const matchedPassword = await UtilService.comparePassword(password, searchManager.password);
+            const matchedPassword = await UtilService.comparePassword(password, searchAuth.password);
             if(!matchedPassword){
                 return res.status(400).json({
                     response_code:400,
                     error:'password is not matched'
                 });
             }
+            const searchManager = await Manager.findOne({emailInfo:searchAuth.id});
+            const token = JWTService.issuer({user: searchManager.id}, '1 day');
             return res.status(200).json({
                 response_code:200,
-                status:'Manager is Authorized'
+                status:'Manager is Authorized',
+                profile:searchManager,
+                result:token
             });
         } catch (err) {
             return res.status(400).json({
@@ -151,7 +155,7 @@ module.exports = {
 
     getManagers: async(req,res)=>{
         try{
-        const manager = await Manager.find().populate('emialInfo');
+        const manager = await Manager.find().populate('emailInfo');
         return res.status(200).json({
             response_code:200,
             result:manager
@@ -167,7 +171,7 @@ module.exports = {
     getManagerID: async(req,res)=>{
         try{
         const id = req.params.id;
-        const manager = await Manager.findOne({where:{id:id}}).populate('emialInfo');
+        const manager = await Manager.findOne({where:{id:id}}).populate('emailInfo');
         if(!manager){
             return res.status(400).json({
                 response_code:400,

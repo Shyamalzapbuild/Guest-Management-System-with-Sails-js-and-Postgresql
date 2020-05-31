@@ -96,7 +96,7 @@ module.exports = {
                 email,password:encryptedPassword,roleId:role.id
             }).fetch();
             const guest = await Guest.create({
-                name, dob, address, phoneNo,emialInfo:auth.id
+                name, dob, address, phoneNo,emailInfo:auth.id
             });
             return res.status(200).json({
                 response_code:200,
@@ -133,23 +133,27 @@ module.exports = {
                     error:'Invalid Email'
                 });
             }
-            const searchGuest = await Auth.findOne({email:email});
-            if(!searchGuest){
+            const searchAuth = await Auth.findOne({email:email});
+            if(!searchAuth){
                 return res.status(400).json({
                     response_code:400,
                     error:'Email is not registered'
                 });
             }
-            const matchedPassword = await UtilService.comparePassword(password, searchGuest.password);
+            const matchedPassword = await UtilService.comparePassword(password, searchAuth.password);
             if(!matchedPassword){
                 return res.status(400).json({
                     response_code:400,
                     error:'password is not matched'
                 });
             }
+            const searchGuest = await Guest.findOne({emailInfo:searchAuth.id});
+            const token = JWTService.issuer({user: searchGuest.id}, '1 day');
             return res.status(200).json({
                 response_code:200,
-                status:'Guest is Authorized'
+                status:'Guest is Authorized',
+                profile:searchAuth,
+                result:token
             });
         } catch (err) {
             return res.status(400).json({
@@ -159,9 +163,34 @@ module.exports = {
         }
     },
 
+    getProfile: async(req,res)=>{
+        try {
+            const guestId = req.guestId;
+            const profile = await Guest.find({
+                where:{id:guestId},
+                select:['name','status','dob','address','phoneNo']
+            }).populate('history');
+            if(!profile){
+                return res.status(400).json({
+                    response_code:400,
+                    error:'No profile find'
+                });
+            }
+            return res.status(200).json({
+                response_code:200,
+                result:profile
+            });
+        } catch (err) {
+            return res.status(400).json({
+                response_code:400,
+                error:err
+            })
+        }
+    },
+
     updateGuest: async (req,res)=>{
         try{
-        const id = req.param.id;
+        const guestId = req.guestId;
         const {name,dob,phoneNo} = req.allParams();
         if(!name){
             return res.badRequest({
@@ -196,19 +225,61 @@ module.exports = {
                 error:'Invalid Date of birth(YYYY-MM-DD)'
             });
         }
-        const updateguest = await Guest.updateOne({id:id})
+        const updateguest = await Guest.updateOne({id:guestId})
         .set({
             name:name, dob:dob, phoneNo:phoneNo
         });
-        return res.ok(updateguest);
+        return res.status(200).json({
+            response_code:200,
+            result:updateguest
+        });
     }catch(err){
         return res.serverError(err);
     }
     },
 
+    ManagerUpdateGuestStatus: async(req,res)=>{
+        const {id, status} = req.allParams();
+        if(!id){
+            return res.status(400).json({
+                response_code:400,
+                error:'GuestId is required'
+            });
+        }
+        if(!status){
+            return res.status(400).json({
+                response_code:400,
+                error:'Status is required'
+            });
+        }
+        if(!(typeof status =='boolean')){
+            return res.status(400).json({
+                response_code:400,
+                error:'Invalid status(try true or false)'
+            });
+        }
+        const searchGuest = await Guest.findOne({id:id});
+        if(!searchGuest){
+            return res.status(400).json({
+                response_code:400,
+                error:'Guest with given Id is not present'
+            });
+        }
+        const updateGuest = await Guest.updateOne({id:id})
+        .set({
+            status:status
+        });
+        return res.status(200).json({
+            response_code:200,
+            status:'Status of Guest is updated',
+            result:updateGuest
+        })
+    },
+
     ManagerUpdateGuest: async(req,res)=>{
         try{
-            const {guestId, managerId, name, dob, address, phoneNo} = req.allParams();
+            const managerId = req.managerId;
+            const {guestId, name, dob, address, phoneNo} = req.allParams();
             if(!guestId){
                 return res.status(400).json({
                     response_code:400,
@@ -263,7 +334,6 @@ module.exports = {
                     error:'Phone Number is not valid'
                 });
             }
-
             const searchGuest = await Guest.findOne({id:guestId});
             if(!searchGuest){
                 return res.status(400).json({
@@ -401,7 +471,7 @@ module.exports = {
 
     deleteGuest: async(req,res)=>{
         try{
-        const id = req.param.id;
+        const id = req.params.id;
         const deleteguest = await Guest.destroyOne({id:id});
         if(!deleteguest){
             return res.status(400).json({
@@ -424,7 +494,8 @@ module.exports = {
 
     ManagerDeleteGuest: async(req,res)=>{
         try {
-            const {guestId,managerId, reason} = req.allParams();
+            const managerId = req.managerId;
+            const {guestId, reason} = req.allParams();
             if(!guestId){
                 return res.status(400).json({
                     response_code:400,
@@ -509,12 +580,6 @@ module.exports = {
                 return res.status(400).json({
                     response_code:400,
                     error:'Status is required'
-                });
-            }
-            if(!(typeof status =='boolean')){
-                return res.status(400).json({
-                    response_code:400,
-                    error:'Invalid status(try true or false)'
                 });
             }
             if(status=='true'){

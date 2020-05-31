@@ -24,15 +24,15 @@ module.exports = {
     },
     admin:{
       collection:'admin',
-      via:'authId'
+      via:'emailInfo'
     },
     manager:{
       collection:'manager',
-      via:'emialInfo'
+      via:'emailInfo'
     },
     guest:{
       collection:'guest',
-      via:'emialInfo'
+      via:'emailInfo'
     }
   }
 };

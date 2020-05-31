@@ -10,19 +10,19 @@ module.exports = {
   attributes: {
     checkIn:{
       type: 'ref',
-      columnType: 'timestamp',
+      columnType: 'date',
       required: true,
     },
     checkOut:{
-      type:'String',
-      columnType:'timestamp',
+      type:'ref',
+      columnType:'date',
+      required:true
     },
-    room:{
+    roomId:{
       model:'room'
     },
     guestId:{
-      collection:'guest',
-      via:'history'
+      model:'guest'
     }
   },
 

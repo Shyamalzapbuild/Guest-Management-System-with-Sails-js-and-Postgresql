@@ -8,9 +8,14 @@
 module.exports = {
 
   attributes: {
-    date:{
+    checkIn:{
       type: 'ref',
-      columnType: 'timestamp',
+      columnType: 'date',
+      required: true,
+    },
+    checkOut:{
+      type:'ref',
+      columnType:'date',
       required:true
     },
     status:{
